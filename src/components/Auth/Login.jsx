@@ -30,7 +30,6 @@ export default function Login({ onLogin }) {
       localStorage.setItem("accessToken", accessToken);
       if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
 
-      
       // notify parent and navigate to dashboard/home
       onLogin?.(user);
       navigate("/"); // change route if you want different landing page

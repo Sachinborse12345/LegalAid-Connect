@@ -14,7 +14,9 @@ import NGODashboard from "./components/Dashboard/NGODashboard.jsx";
 import AdminDashboard from "./components/Dashboard/AdminDashboard.jsx";
 import { getProfile } from "./api/auth.js";
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    name:"sachin",role:"LAWYER"
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function App() {
 
   const onLogin = (userData) => {
     setUser(userData);
-
+ console.log(userData.role);
     if (userData.role === "CITIZEN") navigate("/dashboard/citizen");
     else if (userData.role === "LAWYER") navigate("/dashboard/lawyer");
     else if (userData.role === "NGO") navigate("/dashboard/ngo");
@@ -49,8 +51,9 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
-
         {/* Protected Routes */}
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
         <Route element={<ProtectedRoute user={user} />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard/citizen" element={<CitizenDashboard />} />
@@ -58,7 +61,6 @@ export default function App() {
           <Route path="/dashboard/ngo" element={<NGODashboard />} />
           <Route path="/dashboard/admin" element={<AdminDashboard />} />
         </Route>
-
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
