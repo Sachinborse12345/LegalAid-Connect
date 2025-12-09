@@ -64,7 +64,7 @@ export default function Home({ user }) {
               />
               <h1 className="text-4xl font-bold tracking-tight flex items-center space-x-2">
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-800 bg-clip-text text-transparent">
-                  LegalAid Connect
+                  NyaySathi
                 </span>
               </h1>
             </div>
@@ -199,79 +199,109 @@ export default function Home({ user }) {
           </div>
         </section>
 
-        {/* 🌿 SERVICE CARDS SECTION (Bright + Animated) */}
-        <section className="py-20 bg-gradient-to-b from-white to-blue-50">
+        {/* 🌿 SERVICE CARDS SECTION — NEW & IMPROVED */}
+        <section className="py-24 bg-gradient-to-b from-white to-green-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-center text-gray-900 mb-14 animate-fadeIn">
-              How We Help Communities
+            <h2 className="text-4xl md:text-5xl font-extrabold text-center text-gray-900 mb-10 animate-fadeIn">
+              How We Support Every Step of Justice
             </h2>
+
+            <p className="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-16">
+              Our platform bridges citizens, pro bono lawyers, and NGOs to build
+              a safer, fairer society — one verified case at a time. 🌿
+            </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               {/* Citizens */}
-              <div className="bg-white rounded-3xl shadow-xl border border-blue-100 hover:shadow-3xl hover:-translate-y-2 transition-all duration-300 overflow-hidden animate-slideUp">
+              <div
+                className="relative bg-white/70 backdrop-blur-xl border border-green-200 rounded-3xl 
+          shadow-xl hover:shadow-3xl hover:-translate-y-3 hover:rotate-1 transition-all duration-500 p-8 animate-slideUp"
+              >
+                <div className="absolute -top-6 left-6 bg-green-600 text-white px-4 py-1 rounded-full shadow-lg text-sm tracking-wide">
+                  Citizens
+                </div>
+
                 <img
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCA7R-zr5mHHCX6CdFFzGoC9dBIKnfVKi0dg&s"
-                  className="h-56 w-full object-cover rounded-t-3xl"
+                  className="h-56 w-full object-cover rounded-2xl mb-6 shadow-sm"
                 />
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900">
-                    For Citizens
-                  </h3>
-                  <p className="text-gray-700 mt-3">
-                    We ensure every individual receives guidance and support in
-                    their legal concerns.
-                  </p>
-                  <Link
-                    className="mt-5 inline-block text-blue-700 font-semibold hover:underline"
-                    to="/register"
-                  >
-                    Get Support →
-                  </Link>
-                </div>
+
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Guidance for Every Citizen
+                </h3>
+
+                <p className="text-gray-700 mt-3">
+                  From domestic issues to cybercrime — citizens receive verified
+                  legal guidance, document assistance, and NGO support tailored
+                  to their case.
+                </p>
+
+                <ul className="mt-5 text-gray-700 space-y-2 text-sm">
+                  <li>• Upload case details securely</li>
+                  <li>• Receive matched legal experts instantly</li>
+                  <li>• Track your case through a personalized dashboard</li>
+                </ul>
               </div>
 
               {/* Lawyers */}
-              <div className="bg-white rounded-3xl shadow-xl border border-green-100 hover:shadow-3xl hover:-translate-y-2 transition-all duration-300 overflow-hidden animate-slideUp delay-200">
+              <div
+                className="relative bg-white/70 backdrop-blur-xl border border-blue-200 rounded-3xl 
+          shadow-xl hover:shadow-3xl hover:-translate-y-3 hover:-rotate-1 transition-all duration-500 p-8 animate-slideUp delay-200"
+              >
+                <div className="absolute -top-6 left-6 bg-blue-600 text-white px-4 py-1 rounded-full shadow-lg text-sm tracking-wide">
+                  Lawyers
+                </div>
+
                 <img
                   src="https://www.lawpreptutorial.com/blog/wp-content/uploads/2024/05/karuna-nundy.jpg"
-                  className="h-56 w-full object-cover rounded-t-3xl"
+                  className="h-56 w-full object-cover rounded-2xl mb-6 shadow-sm"
                 />
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900">
-                    For Lawyers
-                  </h3>
-                  <p className="text-gray-700 mt-3">
-                    Work on meaningful cases and help build a fairer justice
-                    system through pro bono support.
-                  </p>
-                  <Link
-                    className="mt-5 inline-block text-green-700 font-semibold hover:underline"
-                    to="/register"
-                  >
-                    Join as Lawyer →
-                  </Link>
-                </div>
+
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Support from Pro Bono Lawyers
+                </h3>
+
+                <p className="text-gray-700 mt-3">
+                  Verified advocates take up meaningful cases, empowering
+                  vulnerable groups and strengthening access to justice.
+                </p>
+
+                <ul className="mt-5 text-gray-700 space-y-2 text-sm">
+                  <li>• Work on high-impact pro bono cases</li>
+                  <li>• Secure document exchange and chat with citizens</li>
+                  <li>• Manage cases through a dedicated lawyer dashboard</li>
+                </ul>
               </div>
 
               {/* NGOs */}
-              <div className="bg-white rounded-3xl shadow-xl border border-indigo-100 hover:shadow-3xl hover:-translate-y-2 transition-all duration-300 overflow-hidden animate-slideUp delay-300">
+              <div
+                className="relative bg-white/70 backdrop-blur-xl border border-indigo-200 rounded-3xl 
+          shadow-xl hover:shadow-3xl hover:-translate-y-3 hover:rotate-1 transition-all duration-500 p-8 animate-slideUp delay-300"
+              >
+                <div className="absolute -top-6 left-6 bg-indigo-600 text-white px-4 py-1 rounded-full shadow-lg text-sm tracking-wide">
+                  NGOs
+                </div>
+
                 <img
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaGeBlODmjwVUMF47IA4F0YDEuj7igdpnVTw&s"
-                  className="h-56 w-full object-cover rounded-t-3xl"
+                  className="h-56 w-full object-cover rounded-2xl mb-6 shadow-sm"
                 />
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900">For NGOs</h3>
-                  <p className="text-gray-700 mt-3">
-                    Partner with us to promote awareness, rights education, and
-                    legal empowerment.
-                  </p>
-                  <Link
-                    className="mt-5 inline-block text-indigo-700 font-semibold hover:underline"
-                    to="/register"
-                  >
-                    Register NGO →
-                  </Link>
-                </div>
+
+                <h3 className="text-2xl font-bold text-gray-900">
+                  NGOs Empowering Justice
+                </h3>
+
+                <p className="text-gray-700 mt-3">
+                  Partner NGOs help verify cases, offer social support, and
+                  coordinate with lawyers to ensure citizens receive complete
+                  protection.
+                </p>
+
+                <ul className="mt-5 text-gray-700 space-y-2 text-sm">
+                  <li>• Case verification & community outreach</li>
+                  <li>• Provide counselling and on-ground assistance</li>
+                  <li>• Monitor progress through impact dashboards</li>
+                </ul>
               </div>
             </div>
           </div>

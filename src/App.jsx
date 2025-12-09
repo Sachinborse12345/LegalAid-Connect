@@ -13,9 +13,17 @@ import LawyerDashboard from "./components/Dashboard/LawyerDashboard.jsx";
 import NGODashboard from "./components/Dashboard/NGODashboard.jsx";
 import AdminDashboard from "./components/Dashboard/AdminDashboard.jsx";
 import { getProfile } from "./api/auth.js";
+import MapComponent from "./pages/MapComponent.jsx";
+import ForgotPassword from "./components/Auth/ForgotPassword.jsx"; //New added
+import VerifyOTP from "./components/Auth/VerifyOTP.jsx";
+import ResetPassword from "./components/Auth/ResetPassword.jsx";
+
+//New added
+
 export default function App() {
   const [user, setUser] = useState({
-    name:"sachin",role:"LAWYER"
+    name: "sachin",
+    role: "LAWYER",
   });
   const navigate = useNavigate();
 
@@ -33,7 +41,7 @@ export default function App() {
 
   const onLogin = (userData) => {
     setUser(userData);
- console.log(userData.role);
+    console.log(userData.role);
     if (userData.role === "CITIZEN") navigate("/dashboard/citizen");
     else if (userData.role === "LAWYER") navigate("/dashboard/lawyer");
     else if (userData.role === "NGO") navigate("/dashboard/ngo");
@@ -44,6 +52,12 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <Routes>
+        //new added
+        <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        //new added
+        <Route path="/map" element={<MapComponent />} />
         <Route path="/" element={<Home user={user} />} />
         <Route path="/login" element={<Login onLogin={onLogin} />} />
         <Route path="/register" element={<Register onRegister={onLogin} />} />
@@ -53,7 +67,6 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         {/* Protected Routes */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-
         <Route element={<ProtectedRoute user={user} />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard/citizen" element={<CitizenDashboard />} />

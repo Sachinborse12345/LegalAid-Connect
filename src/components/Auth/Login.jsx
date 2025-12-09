@@ -117,7 +117,7 @@ export default function Login({ onLogin }) {
                   htmlFor="username"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Username or Email
+                  Registered Email
                 </label>
                 <input
                   id="username"
@@ -177,7 +177,7 @@ export default function Login({ onLogin }) {
                   <span>Remember me</span>
                 </label>
                 <Link to="/forgot" className="text-blue-600 hover:underline">
-                  Forgot?
+                  Forgot Password?
                 </Link>
               </div>
 
