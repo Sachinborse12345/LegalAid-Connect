@@ -64,7 +64,7 @@ export default function Home({ user }) {
               />
               <h1 className="text-4xl font-bold tracking-tight flex items-center space-x-2">
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-800 bg-clip-text text-transparent">
-                  NyaySathi
+                  AdvoCare
                 </span>
               </h1>
             </div>

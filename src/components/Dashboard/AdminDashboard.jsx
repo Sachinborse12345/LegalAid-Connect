@@ -1,8 +1,18 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 export default function AdminDashboard() {
+  const navigate = useNavigate(); // ✅ for redirect
   const [activeTab, setActiveTab] = useState("lawyers");
 
+  const handleLogout = () => {
+    // ✅ logout function
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    navigate("/login", {
+      state: { success: "Logged out successfully!" },
+    });
+  };
   // Lawyer & NGO sample data — in real project, fetch from backend
   const [lawyers, setLawyers] = useState([
     {
@@ -138,7 +148,10 @@ export default function AdminDashboard() {
               A
             </div>
             <span className="font-medium text-gray-700">Admin</span>
-            <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg"
+            >
               Logout
             </button>
           </div>

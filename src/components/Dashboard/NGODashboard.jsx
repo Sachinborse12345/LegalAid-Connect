@@ -29,9 +29,12 @@ export default function NGODashboard() {
           />
           <div>
             <h1 className="text-sm text-gray-500">Legal Aid Platform</h1>
-            <h2 className="text-xl font-bold text-gray-800 -mt-1">
-              NGO Dashboard
-            </h2>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg"
+            >
+              Logout
+            </button>
           </div>
         </div>
 

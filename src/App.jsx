@@ -39,21 +39,28 @@ export default function App() {
     fetchProfile();
   }, []);
 
+  // const onLogin = (userData) => {
+  //   setUser(userData);
+  //   console.log(userData.role);
+  //   if (userData.role === "CITIZEN") navigate("/dashboard/citizen");
+  //   else if (userData.role === "LAWYER") navigate("/dashboard/lawyer");
+  //   else if (userData.role === "NGO") navigate("/dashboard/ngo");
+  //   else if (userData.role === "ADMIN") navigate("/dashboard/admin");
+  //   else navigate("/");
+  // };
+
   const onLogin = (userData) => {
     setUser(userData);
-    console.log(userData.role);
-    if (userData.role === "CITIZEN") navigate("/dashboard/citizen");
-    else if (userData.role === "LAWYER") navigate("/dashboard/lawyer");
-    else if (userData.role === "NGO") navigate("/dashboard/ngo");
-    else if (userData.role === "ADMIN") navigate("/dashboard/admin");
-    else navigate("/");
+    navigate("/dashboard/citizen", {
+      state: { success: "Login successful!" },
+    });
   };
 
   return (
     <div className="min-h-screen">
       <Routes>
         //new added
-        <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         //new added
@@ -67,14 +74,14 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         {/* Protected Routes */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route element={<ProtectedRoute user={user} />}>
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/dashboard/citizen" element={<CitizenDashboard />} />
-          <Route path="/dashboard/lawyer" element={<LawyerDashboard />} />
-          <Route path="/dashboard/ngo" element={<NGODashboard />} />
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* <Route element={<ProtectedRoute user={user} />}> */}
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
+        <Route path="/lawyer/dashboard" element={<LawyerDashboard />} />
+        <Route path="/ngo/dashboard" element={<NGODashboard />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        {/* </Route> */}
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
     </div>
   );
