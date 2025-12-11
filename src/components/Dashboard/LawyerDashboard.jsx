@@ -3,6 +3,10 @@ import React, { useState } from "react";
 export default function LawyerDashboard() {
   const [caseAccepted, setCaseAccepted] = useState(false);
   const [showChat, setShowChat] = useState(true);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
 
   // Case sent from citizen
   const lawyerCase = {

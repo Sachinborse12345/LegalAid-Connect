@@ -312,7 +312,7 @@ export default function Home({ user }) {
           <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
             <div>
               <h2 className="text-2xl font-extrabold text-white">
-                LegalAid Connect 🌿
+                AdvoCare 🌿
               </h2>
               <p className="mt-4 text-gray-400">
                 We believe justice is a right, not a privilege. Our mission is
@@ -402,7 +402,7 @@ export default function Home({ user }) {
           </div>
 
           <div className="border-t border-gray-700 mt-12 pt-6 text-center text-gray-400">
-            © {new Date().getFullYear()} LegalAid Connect. All Rights Reserved.
+            © {new Date().getFullYear()} AdvoCare. All Rights Reserved.
           </div>
         </footer>
       </div>
