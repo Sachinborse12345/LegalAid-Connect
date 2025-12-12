@@ -17,55 +17,38 @@ export default function Login() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validatePassword = (pass) => {
+    const lengthOK = pass.length >= 8;
+    const specialCharOK = /[!@#$%^&*(),.?":{}|<>]/.test(pass);
+    return lengthOK && specialCharOK;
+  };
+
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError(null);
-  //   setLoading(true);
-
-  //   try {
-  // const res = await login(form);
-
-  // // Save token
-  // localStorage.setItem("accessToken", res.data.accessToken);
-
-  // // ROLE
-  // const userRole = res.data.role;
-
-  //     const userRole = form.role;
-
-  //     if (userRole === "CITIZEN") {
-  //       navigate("dashboard/citizen", {
-  //         state: { success: "Login successful! Welcome back." },
-  //       });
-  //     } else if (userRole === "LAWYER") {
-  //       navigate("/lawyer/dashboard", {
-  //         state: { success: "Login successful! Welcome Lawyer." },
-  //       });
-  //     } else if (userRole === "NGO") {
-  //       navigate("/ngo/dashboard", {
-  //         state: { success: "Login successful! Welcome NGO Member." },
-  //       });
-  //     } else if (userRole === "ADMIN") {
-  //       navigate("/admin/dashboard", {
-  //         state: { success: "Login successful! Welcome Admin." },
-  //       });
-  //     }
-  //   } catch (err) {
-  //     setError(err?.response?.data?.message || "Login failed");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError(null);
+
+    if (!validateEmail(form.username)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!validatePassword(form.password)) {
+      setError(
+        "Password must be at least 8 characters long and include one special character."
+      );
+      return;
+    }
+
     setLoading(true);
 
-    // Simulate delay like real backend (optional)
     setTimeout(() => {
       const userRole = form.role;
 
@@ -122,9 +105,6 @@ export default function Login() {
             <h2 className="text-2xl font-extrabold text-gray-900">
               Welcome Back
             </h2>
-            <p className="text-sm text-gray-500 mb-6">
-              Log in to continue......
-            </p>
 
             {error && (
               <div className="mb-4 text-sm text-red-600 rounded px-3 py-2 bg-red-50 border border-red-100">
@@ -140,6 +120,7 @@ export default function Login() {
                 <input
                   name="username"
                   value={form.username}
+                  type="email"
                   onChange={handleChange}
                   className="w-full border border-gray-200 rounded-lg p-3"
                   required

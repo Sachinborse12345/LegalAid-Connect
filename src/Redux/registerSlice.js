@@ -13,11 +13,11 @@ export const submitRegistration = createAsyncThunk(
             // -----------------------------------------
             if (role === "Citizen") {
                 const payload = {
-                    full_name: data.fullName,
-                    aadhar_number: data.aadhar,
+                    fullName: data.fullName,
+                    aadharNum: data.aadhar,
                     email: data.email,
-                    mobile_number: data.phone,
-                    date_of_birth: data.dob,
+                    mobileNum: data.phone,
+                    dateOfBirth: data.dob,
                     password: data.password,
                 };
 
