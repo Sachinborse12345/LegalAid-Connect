@@ -1,7 +1,27 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../Redux/authSlice.js";
 // import MapComponent from "./MapComponent";
 export default function Home({ user }) {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  // Logout user if they navigate back to home page using browser back button
+  // Only logout if user is actually authenticated (has valid token and isAuthenticated is true)
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    const role = localStorage.getItem("role");
+    
+    // Only logout if:
+    // 1. There's a token in localStorage
+    // 2. User is authenticated in Redux
+    // 3. User has a role (meaning they were actually logged in)
+    if (token && isAuthenticated && role) {
+      // User is logged in but navigated to home page - logout them
+      dispatch(logoutUser());
+    }
+  }, [dispatch, isAuthenticated]);
   // 🌿 IMAGE SLIDER DATA
   const sliderImages = [
     {

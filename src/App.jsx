@@ -29,10 +29,25 @@ export default function App() {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      // Only try to fetch profile if there's a token
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        setUser(null);
+        return;
+      }
+      
       try {
         const res = await getProfile();
-        setUser(res.data);
-      } catch {
+        if (res && res.data) {
+          setUser(res.data);
+        }
+      } catch (error) {
+        // Silently fail - user is not logged in
+        // Clear any invalid token
+        if (error.response?.status === 401) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+        }
         setUser(null);
       }
     };
@@ -66,7 +81,7 @@ export default function App() {
         //new added
         <Route path="/map" element={<MapComponent />} />
         <Route path="/" element={<Home user={user} />} />
-        <Route path="/login" element={<Login onLogin={onLogin} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register onRegister={onLogin} />} />
         {/* ⭐ Newly added pages */}
         <Route path="/about" element={<About />} />

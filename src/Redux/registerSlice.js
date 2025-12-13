@@ -18,6 +18,10 @@ export const submitRegistration = createAsyncThunk(
                     email: data.email,
                     mobileNum: data.phone,
                     dateOfBirth: data.dob,
+                    state: data.state,
+                    district: data.district,
+                    city: data.city,
+                    address: data.address,
                     password: data.password,
                 };
 
@@ -34,13 +38,70 @@ export const submitRegistration = createAsyncThunk(
             // LAWYER + NGO → THEY HAVE FILE UPLOADS → USE FORMDATA
             // -----------------------------------------
             const formData = new FormData();
-            Object.entries(data).forEach(([key, value]) => {
-                formData.append(key, value);
-            });
-            formData.append("role", role);
+            
+            if (role === "Lawyer") {
+                // Map Lawyer form fields to backend expected field names
+                formData.append("fullName", data.fullName || "");
+                formData.append("email", data.email || "");
+                formData.append("phone", data.phone || "");
+                formData.append("aadhar", data.aadhar || "");
+                if (data.aadharProof) {
+                    formData.append("aadharProof", data.aadharProof);
+                }
+                formData.append("barId", data.barId || "");
+                formData.append("barState", data.barState || "");
+                formData.append("specialization", data.specialization || "");
+                if (data.barCert) {
+                    formData.append("barCert", data.barCert);
+                }
+                formData.append("experience", data.experience || "");
+                formData.append("address", data.address || "");
+                formData.append("district", data.district || "");
+                formData.append("city", data.city || "");
+                formData.append("state", data.state || "");
+                if (data.latitude) {
+                    formData.append("latitude", data.latitude);
+                }
+                if (data.longitude) {
+                    formData.append("longitude", data.longitude);
+                }
+                formData.append("password", data.password || "");
+            } else if (role === "NGO") {
+                // Map NGO form fields to backend expected field names
+                formData.append("ngoName", data.ngoName || "");
+                formData.append("ngoType", data.ngoType || "");
+                formData.append("registrationNumber", data.registrationNumber || "");
+                if (data.registrationCertificate) {
+                    formData.append("registrationCertificate", data.registrationCertificate);
+                }
+                formData.append("contact", data.contact || "");
+                formData.append("email", data.email || "");
+                formData.append("address", data.address || "");
+                formData.append("state", data.state || "");
+                formData.append("district", data.district || "");
+                formData.append("city", data.city || "");
+                formData.append("pincode", data.pincode || "");
+                if (data.latitude) {
+                    formData.append("latitude", data.latitude);
+                }
+                if (data.longitude) {
+                    formData.append("longitude", data.longitude);
+                }
+                formData.append("password", data.password || "");
+            }
+
+            // Fix endpoint URL - use correct path for each role
+            let endpoint;
+            if (role === "Lawyer") {
+                endpoint = "http://localhost:8080/lawyers/add";
+            } else if (role === "NGO") {
+                endpoint = "http://localhost:8080/ngos/add";
+            } else {
+                endpoint = "http://localhost:8080/" + role.toLowerCase() + "/add";
+            }
 
             const response = await axios.post(
-                "http://localhost:8080/" + role.toLowerCase() + "/add",
+                endpoint,
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
@@ -81,6 +142,10 @@ const initialState = {
         email: "",
         phone: "",
         dob: "",
+        state: "",
+        district: "",
+        city: "",
+        address: "",
         password: "",
         confirmPassword: "",
     },
@@ -90,32 +155,36 @@ const initialState = {
         email: "",
         phone: "",
         aadhar: "",
-        aadharProof: null,
+        aadharProofFilename: "", // Store filename only, not File object
         barId: "",
         barState: "",
         specialization: "",
-        barCert: null,
+        barCertFilename: "", // Store filename only, not File object
         experience: "",
         address: "",
         district: "",
         city: "",
         state: "",
+        latitude: "",
+        longitude: "",
         password: "",
         confirmPassword: "",
     },
 
     ngo: {
-        name: "",
-        type: "",
-        regNo: "",
-        regCert: null,
+        ngoName: "",
+        ngoType: "",
+        registrationNumber: "",
+        registrationCertificateFilename: "", // Store filename only, not File object
         contact: "",
-        officialEmail: "",
+        email: "",
         address: "",
+        state: "",
         district: "",
         city: "",
-        state: "",
         pincode: "",
+        latitude: "",
+        longitude: "",
         password: "",
         confirmPassword: "",
     },

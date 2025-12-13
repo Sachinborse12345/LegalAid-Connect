@@ -1,8 +1,18 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../api/auth.js";
 
 export default function NGODashboard() {
+  const navigate = useNavigate();
   const [caseAccepted, setCaseAccepted] = useState(false);
   const [showChat, setShowChat] = useState(true);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", {
+      state: { success: "Logged out successfully!" },
+    });
+  };
 
   const ngoCase = {
     id: 501,
@@ -43,7 +53,10 @@ export default function NGODashboard() {
             N
           </div>
           <span className="font-medium text-gray-700">NGO</span>
-          <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+          <button 
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+          >
             Logout
           </button>
         </div>

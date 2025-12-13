@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { login } from "../../api/auth.js";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, clearError } from "../../Redux/authSlice.js";
+import { toast } from "react-toastify";
 
 export default function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Get auth state from Redux
+  const { isLoading, error: authError, user, isAuthenticated } = useSelector((state) => state.auth);
 
   const successMsg = location.state?.success || null;
 
@@ -15,73 +21,173 @@ export default function Login() {
   });
 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const loading = isLoading;
+  
+  // Validation state
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
 
+  // Display success message (e.g., logout message) in toast
+  useEffect(() => {
+    if (successMsg) {
+      toast.success(successMsg, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      // Clear the location state to prevent showing the message again on re-render
+      window.history.replaceState({}, document.title);
+    }
+  }, [successMsg]);
+
+  // Validation functions
   const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
+    if (!email || email.trim() === "") {
+      return "Email is required";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return "Please enter a valid email address";
+    }
+    return "";
   };
 
-  const validatePassword = (pass) => {
-    const lengthOK = pass.length >= 8;
-    const specialCharOK = /[!@#$%^&*(),.?":{}|<>]/.test(pass);
-    return lengthOK && specialCharOK;
+  const validatePassword = (password) => {
+    if (!password || password.trim() === "") {
+      return "Password is required";
+    }
+    return "";
   };
 
-  const handleChange = (e) =>
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError(null);
-
-    if (!validateEmail(form.username)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-
-    if (!validatePassword(form.password)) {
-      setError(
-        "Password must be at least 8 characters long and include one special character."
-      );
-      return;
-    }
-
-    setLoading(true);
-
-    setTimeout(() => {
-      const userRole = form.role;
-
-      if (userRole === "CITIZEN") {
-        navigate("/citizen/dashboard", {
-          state: { success: "Login successful! Welcome Citizen." },
-        });
-      } else if (userRole === "LAWYER") {
-        navigate("/lawyer/dashboard", {
-          state: { success: "Login successful! Welcome Lawyer." },
-        });
-      } else if (userRole === "NGO") {
-        navigate("/ngo/dashboard", {
-          state: { success: "Login successful! Welcome NGO Member." },
-        });
-      } else if (userRole === "ADMIN") {
-        navigate("/admin/dashboard", {
-          state: { success: "Login successful! Welcome Admin." },
-        });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    
+    // Validate on change if field has been touched
+    if (touched[name]) {
+      let error = "";
+      if (name === "username") {
+        error = validateEmail(value);
+      } else if (name === "password") {
+        error = validatePassword(value);
       }
+      setErrors((prev) => ({ ...prev, [name]: error }));
+    }
+  };
 
-      setLoading(false);
-    }, 500);
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const value = form[field] || "";
+    let error = "";
+    if (field === "username") {
+      error = validateEmail(value);
+    } else if (field === "password") {
+      error = validatePassword(value);
+    }
+    setErrors((prev) => ({ ...prev, [field]: error }));
+  };
+
+  // Handle successful login - navigate based on role
+  useEffect(() => {
+    if (isAuthenticated && user.role) {
+      toast.success("Login successful!");
+      
+      setTimeout(() => {
+        const userRole = user.role;
+        if (userRole === "CITIZEN") {
+          navigate("/citizen/dashboard", {
+            state: { success: "Login successful! Welcome Citizen." },
+          });
+        } else if (userRole === "LAWYER") {
+          navigate("/lawyer/dashboard", {
+            state: { success: "Login successful! Welcome Lawyer." },
+          });
+        } else if (userRole === "NGO") {
+          navigate("/ngo/dashboard", {
+            state: { success: "Login successful! Welcome NGO Member." },
+          });
+        } else if (userRole === "ADMIN") {
+          navigate("/admin/dashboard", {
+            state: { success: "Login successful! Welcome Admin." },
+          });
+        } else {
+          navigate("/");
+        }
+      }, 500);
+    }
+  }, [isAuthenticated, user.role, navigate]);
+
+  // Handle auth errors from Redux
+  useEffect(() => {
+    if (authError) {
+      toast.error(authError, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setError(authError);
+      // Clear error after displaying
+      dispatch(clearError());
+    }
+  }, [authError, dispatch]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
+    
+    // Clear previous errors
+    setError(null);
+    setErrors({});
+    dispatch(clearError());
+
+    // Validate all fields
+    const emailError = validateEmail(form.username);
+    const passwordError = validatePassword(form.password);
+
+    const newErrors = {};
+    if (emailError) {
+      newErrors.username = emailError;
+    }
+    if (passwordError) {
+      newErrors.password = passwordError;
+    }
+
+    setErrors(newErrors);
+    setTouched({ username: true, password: true });
+
+    // If there are validation errors, don't submit
+    if (Object.keys(newErrors).length > 0) {
+      toast.error("Please fix all validation errors before submitting");
+      return false; // Explicitly return false to prevent any default behavior
+    }
+
+    // Dispatch login action using Redux
+    const result = await dispatch(
+      loginUser({
+        username: form.username,
+        password: form.password,
+        role: form.role,
+      })
+    );
+
+    // Check if login was successful
+    if (loginUser.fulfilled.match(result)) {
+      // Navigation will be handled by useEffect when isAuthenticated becomes true
+      return false;
+    } else {
+      // Error is already handled by useEffect watching authError
+      return false;
+    }
   };
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-blue-50 px-4">
-      {successMsg && (
-        <div className="mb-4 text-green-700 bg-green-100 border border-green-300 p-3 rounded-lg text-center">
-          {successMsg}
-        </div>
-      )}
-
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         {/* IMAGE LEFT */}
         <div className="relative rounded-2xl overflow-hidden shadow-2xl h-96 md:h-[520px]">
@@ -112,33 +218,58 @@ export default function Login() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate onKeyDown={(e) => {
+              // Prevent form submission on Enter key if there are errors
+              if (e.key === 'Enter' && (loading || Object.keys(errors).length > 0)) {
+                e.preventDefault();
+              }
+            }}>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Registered Email
+                  Registered Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   name="username"
                   value={form.username}
                   type="email"
                   onChange={handleChange}
-                  className="w-full border border-gray-200 rounded-lg p-3"
-                  required
+                  onBlur={() => handleBlur("username")}
+                  disabled={loading}
+                  className={`w-full border rounded-lg p-3 focus:outline-none focus:ring-1 ${
+                    loading
+                      ? "bg-gray-100 cursor-not-allowed opacity-60 border-gray-200"
+                      : touched.username && errors.username
+                      ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                      : "border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                  }`}
                 />
+                {touched.username && errors.username && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.username}</span>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Password
+                  Password <span className="text-red-500">*</span>
                 </label>
                 <input
                   name="password"
                   type="password"
                   value={form.password}
                   onChange={handleChange}
-                  className="w-full border border-gray-200 rounded-lg p-3"
-                  required
+                  onBlur={() => handleBlur("password")}
+                  disabled={loading}
+                  className={`w-full border rounded-lg p-3 focus:outline-none focus:ring-1 ${
+                    loading
+                      ? "bg-gray-100 cursor-not-allowed opacity-60 border-gray-200"
+                      : touched.password && errors.password
+                      ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                      : "border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                  }`}
                 />
+                {touched.password && errors.password && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.password}</span>
+                )}
               </div>
 
               <div>
@@ -169,9 +300,35 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {loading ? "Logging in..." : "Log In"}
+                {loading ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    <span>Logging in...</span>
+                  </>
+                ) : (
+                  "Log In"
+                )}
               </button>
             </form>
 

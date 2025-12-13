@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter } from "react-router-dom";
-import { Toaster } from "sonner";
+import { BrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import App from "./App.jsx";
 import "./index.css";
@@ -10,10 +11,17 @@ import { store } from "./app/store.js";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <HashRouter>
-        <Toaster position="top-right" richColors />
+      <BrowserRouter>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+        />
         <App />
-      </HashRouter>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );
